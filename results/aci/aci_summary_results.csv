@@ -1,0 +1,15 @@
+model,loss,picp,mpiw,standard_dev,time
+ann,quantile,0.78125,4181.82666,6.94E-05,165.4225209
+ann,tube,0.828125,3955.962158,0,98.65378833
+lstm,quantile,0.885416667,7005.036621,0.000339052,262.2654247
+lstm,tube,0.932291667,5823.282715,0.000179739,142.9738455
+tcn,quantile,0.942708333,5564.786621,3.68E-05,355.1217215
+tcn,tube,0.921875,4778.179199,0,185.0723987
+,,,,,
+,,,,,
+,,Local miscoverage error,,,
+,,,,,
+,,Mean local miscoverage error,,,std LME
+,,,,,
+,,,,,
+,,P. LME,,,
