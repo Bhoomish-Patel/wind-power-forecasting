@@ -42,13 +42,12 @@ def find_local_mpiw(lower, upper, predictions):
         local_mpiw.append(cur)
     return local_mpiw
 def find_lpice(local_picp, req_cov):
-    local_picp = np.asarray(local_picp) 
-    diff = req_cov - local_picp
-    return np.mean(np.maximum(diff, 0))
-def find_mpice(local_mpiw, req_cov):
-    local_mpiw = np.asarray(local_mpiw)
-    diff = req_cov - local_mpiw
-    return np.mean(np.maximum(diff, 0))
+    var = 0
+    for i in range(len(local_picp)):
+        var += max(req_cov-local_picp[i],0)**2
+    var/=len(local_picp)
+    std =  np.sqrt(var)
+    return std
 for s in setting:
     targetfile = f"results/{s}/{s}_summary_results.csv"
     results_df = pd.DataFrame(columns=[
@@ -61,7 +60,6 @@ for s in setting:
         "mlpicp",
         "mlmpiw",
         "lpice",
-        "mpice"
     ])
     for model in models:
         for loss in losses:
@@ -78,7 +76,6 @@ for s in setting:
             mean_local_picp = np.mean(local_picp)
             mean_local_mpiw = np.mean(local_mpiw)
             lpice = find_lpice(local_picp,0.9)
-            mpice = find_mpice(local_mpiw,0.9)
             new_row = {
                 "setting":s,
                 "model":model,
@@ -89,7 +86,6 @@ for s in setting:
                 "mlpicp":mean_local_picp,
                 "mlmpiw":mean_local_mpiw,
                 "lpice":lpice,
-                "mpice":mpice,
             }
             results_df.loc[len(results_df)] = new_row
     results_df.to_csv(targetfile,index=False)
