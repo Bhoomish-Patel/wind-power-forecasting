@@ -189,9 +189,9 @@ class TCNQuantileReg(nn.Module):
         self.fc = nn.Linear(num_channels[-1], 1)
         
     def forward(self, x):
-        x = x.unsqueeze(1)  # Add channel dimension
+        x = x.unsqueeze(1) 
         out = self.tcn(x)
-        out = out[:, :, -1]  # Take last time step
+        out = out[:, :, -1] 
         return self.fc(out)
 
 class TCNTubeReg(nn.Module):
@@ -201,7 +201,32 @@ class TCNTubeReg(nn.Module):
         self.fc = nn.Linear(num_channels[-1], 2)
         
     def forward(self, x):
-        x = x.unsqueeze(1)  # Add channel dimension
+        x = x.unsqueeze(1) 
         out = self.tcn(x)
-        out = out[:, :, -1]  # Take last time step
+        out = out[:, :, -1]  
+        return self.fc(out)
+
+class GRUQuantileReg(nn.Module):
+    def __init__(self, input_dim=1, hidden_dim=64, num_layers=2):
+        super().__init__()
+        self.gru = nn.GRU(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, 1)  
+
+    def forward(self, x):
+        x = x.unsqueeze(-1) 
+        out, _ = self.gru(x)
+        out = out[:, -1, :]  
+        return self.fc(out)
+
+
+class GRUTubeReg(nn.Module):
+    def __init__(self, input_dim=1, hidden_dim=64, num_layers=2):
+        super().__init__()
+        self.gru = nn.GRU(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, 2)  
+
+    def forward(self, x):
+        x = x.unsqueeze(-1) 
+        out, _ = self.gru(x)
+        out = out[:, -1, :] 
         return self.fc(out)

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 setting = ['aci', 'withoutaci']
-models = ["ann", "lstm", "tcn"]
+models = ["gru", "lstm", "tcn"]
 losses = ["quantile", "tube"]
 def find_picp(lower,upper,predictions):
     inside = (predictions >= lower) & (predictions <= upper)
