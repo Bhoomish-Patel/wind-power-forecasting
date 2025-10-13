@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-setting = ['aci', 'withoutaci']
+setting = ['withoutaci','aci']
 models = ["gru", "lstm", "tcn"]
 losses = ["quantile", "tube"]
 def find_picp(lower,upper,predictions):
@@ -66,8 +66,8 @@ for s in setting:
         "mpiw",
         "mlpicp",
         "mlmpiw",
-        "lpice",
-        "lpice_mean"
+        "lpice_std",
+        "lpice"
     ])
     for model in models:
         for loss in losses:
@@ -81,8 +81,8 @@ for s in setting:
             mpiw = find_mpiw(lower,upper,predictions)
             local_mpiw = find_local_mpiw(lower,upper,predictions)
             local_picp = find_local_picp(lower,upper,predictions)
-            print(f"{s} {model} {loss}")
-            print(local_picp)
+            # print(f"{s} {model} {loss}")
+            # print(local_picp)
             mean_local_picp = np.mean(local_picp)
             mean_local_mpiw = np.mean(local_mpiw)
             lpice = find_lpice(local_picp,0.9)
@@ -96,8 +96,8 @@ for s in setting:
                 "mpiw":mpiw,
                 "mlpicp":mean_local_picp,
                 "mlmpiw":mean_local_mpiw,
-                "lpice":lpice,
-                "lpice_mean":lpice_mean,
+                "lpice_std":lpice,
+                "lpice":lpice_mean,
             }
             results_df.loc[len(results_df)] = new_row
     results_df.to_csv(targetfile,index=False)
